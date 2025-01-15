@@ -22,13 +22,16 @@ namespace Palermo.Models
         public void ShuffleList<T>(List<T> list)
         {
             //Shuffles a list (useful for assigning roles).
+            var listCopy = list;
+            var shuffledList = new List<T>();   
+
             Random random = new Random();
-            for (int i = 0; i < list.Count; i++)
+            for (int i = 0; i < listCopy.Count; i++)
             {
-                var randomInt = random.Next(0, list.Count);
-                var index = list[randomInt];
-                list.Remove(index);
-                list.Add(index);
+                var randomInt = random.Next(0, listCopy.Count);
+                var item = listCopy[randomInt];
+                listCopy.Remove(item);
+                shuffledList.Add(item);
             }
         }
     }
