@@ -17,15 +17,23 @@ namespace Palermo.Models
         {
             //Records a vote from one player to another.
             Votes.Add(voterId, targetId);
+            if (Players.ContainsKey(targetId))
+            {
+                Players[targetId] = + 1;
+            }
+            else
+            {
             Players.Add(targetId, 1);
+            }
         }
 
-        public int GetEliminatedPlayerId()
+        public void GetEliminatedPlayerId()
         {
             //Determines the player with the most votes.
             for (int i = 0; i < Players.Count; i++)
             {
-                var playerVotes = Players[i];
+                var player = Players[i];
+                var playerVotes = player;
             }
         }
     }

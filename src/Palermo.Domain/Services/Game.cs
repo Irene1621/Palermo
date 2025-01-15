@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
@@ -24,8 +25,20 @@ namespace Palermo.Models
             //Sets up the game by assigning roles randomly.
             Utils utils = new Utils();
             CurrentPhase = GamePhase.Day;
-            var player = utils.GetRandomPlayer;
-            
+
+            var player = utils.GetRandomPlayer(Players);
+            Roles.Add(player, RoleType.Detective);
+            Players.Remove(player);
+            var player2 = utils.GetRandomPlayer(Players);
+            Roles.Add(player2,RoleType.Mafia);
+            Players.Remove(player2);
+            var numberOfCitizens = numberOfPlayers - 2;
+            for (int i = 0; i < numberOfCitizens; i++)
+            {
+                var citizen = utils.GetRandomPlayer(Players);
+                Roles.Add(citizen, RoleType.Citizen);
+                Players.Remove(citizen);
+            }
         }
 
         public void Start(int playersNum, List<string> names)
@@ -53,22 +66,24 @@ namespace Palermo.Models
         public void ExecuteNightPhase()
         {
             //Handles all actions for the Night phase.
+            CurrentPhase = GamePhase.Night;
         }
 
         public void ExecuteDayPhase()
         {
             //Handles voting and discussions for the Day phase.
+            CurrentPhase = GamePhase.Day;
         }
 
         public bool CheckVictoryConditions()
         {
             //Determines if the game has ended and which side has won.
-            if(Roles.Where(x => x.Value == RoleType.Detective).Count() == 0)
+            if(Roles.Where(x => x.Value == RoleType.Mafia).Count() == 0)
             {
                 Winner = "Villagers";
                 return true;
             }
-            else if(Roles.Where(x => x.Value == RoleType.Mafia).Count() == 0)
+            else if(Roles.Where(x => x.Value == RoleType.Detective).Count() == 0)
             {
                 Winner = "Mafia";
                 return true;
