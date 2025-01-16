@@ -20,24 +20,50 @@ namespace Palermo.Models
         public Dictionary<Player, RoleType> Roles { get; set; }
         public string Winner {  get; set; }
 
-        public void InitializeGame(int numberOfPlayers, List<string> playerNames)
+        public string InitializeGame(int numberOfPlayers, List<string> playerNames)
         {
             //Sets up the game by assigning roles randomly.
             Utils utils = new Utils();
             CurrentPhase = GamePhase.Day;
+            var error = string.Empty;
 
-            var player = utils.GetRandomPlayer(Players);
-            Roles.Add(player, RoleType.Detective);
-            Players.Remove(player);
-            var player2 = utils.GetRandomPlayer(Players);
-            Roles.Add(player2,RoleType.Mafia);
-            Players.Remove(player2);
-            var numberOfCitizens = numberOfPlayers - 2;
-            for (int i = 0; i < numberOfCitizens; i++)
+            if (numberOfPlayers > 5)
             {
-                var citizen = utils.GetRandomPlayer(Players);
-                Roles.Add(citizen, RoleType.Citizen);
-                Players.Remove(citizen);
+                var remainingPlayers = numberOfPlayers;
+                var shuffledListPlayers = utils.ShuffleList(Players);
+
+                //Picks a random player
+                //Adds him to the list Roles and defines him as detective
+                //Removes him from the shuffled list
+                //Calculates remaining players
+                var detectivePlayer = utils.GetRandomPlayer(shuffledListPlayers);
+                Roles.Add(detectivePlayer, RoleType.Detective);
+                shuffledListPlayers.Remove(detectivePlayer);
+                remainingPlayers -= 1;
+
+                //Defines the mafia players
+                for (int i = 0; i < 2; i++)
+                {
+                    var mafiaPlayer = utils.GetRandomPlayer(shuffledListPlayers);
+                    Roles.Add(mafiaPlayer, RoleType.Mafia);
+                    shuffledListPlayers.Remove(mafiaPlayer);
+                    remainingPlayers -= 1;
+                }
+                //Defines the citizens
+                for (int i = 0; i < remainingPlayers; i++)
+                {
+                    var citizen = utils.GetRandomPlayer(shuffledListPlayers);
+                    Roles.Add(citizen, RoleType.Citizen);
+                    Players.Remove(citizen);
+                    remainingPlayers -= 1;
+                }
+                error = string.Empty;
+                return error;
+            }
+            else
+            {
+                error = "The number of players should be at least 5";
+                return error;
             }
         }
 
@@ -50,7 +76,7 @@ namespace Palermo.Models
                 while (CurrentPhase == GamePhase.Day)
                 {
                     ExecuteDayPhase();
-                    var result = CheckVictoryConditions();
+                    var result = IsThereAWinnerYet();
                     if (result == true)
                     {
                         DisplayResults();
@@ -75,7 +101,7 @@ namespace Palermo.Models
             CurrentPhase = GamePhase.Day;
         }
 
-        public bool CheckVictoryConditions()
+        public bool IsThereAWinnerYet()
         {
             //Determines if the game has ended and which side has won.
             if(Roles.Where(x => x.Value == RoleType.Mafia).Count() == 0)

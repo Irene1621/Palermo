@@ -19,7 +19,7 @@ namespace Palermo.Models
             return player;
         }
 
-        public void ShuffleList<T>(List<T> list)
+        public List<T> ShuffleList<T>(List<T> list)
         {
             //Shuffles a list (useful for assigning roles).
             var listCopy = list;
@@ -33,6 +33,8 @@ namespace Palermo.Models
                 listCopy.Remove(item);
                 shuffledList.Add(item);
             }
+
+            return shuffledList;
         }
     }
 }

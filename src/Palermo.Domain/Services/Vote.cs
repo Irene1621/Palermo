@@ -19,7 +19,7 @@ namespace Palermo.Models
             Votes.Add(voterId, targetId);
             if (Players.ContainsKey(targetId))
             {
-                Players[targetId] = + 1;
+                Players[targetId] += 1;
             }
             else
             {

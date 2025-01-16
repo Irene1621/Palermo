@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Palermo.Domain", "src\Paler
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Palermo.UI.Console", "src\Palermo.UI.Console\Palermo.UI.Console.csproj", "{B63080BB-306F-4D7F-BA10-7396C9BDC249}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Palermo.Tests", "test\Palermo.Tests\Palermo.Tests.csproj", "{93D7465F-443C-4888-8FE1-7722516D8370}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{B63080BB-306F-4D7F-BA10-7396C9BDC249}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B63080BB-306F-4D7F-BA10-7396C9BDC249}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B63080BB-306F-4D7F-BA10-7396C9BDC249}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93D7465F-443C-4888-8FE1-7722516D8370}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93D7465F-443C-4888-8FE1-7722516D8370}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93D7465F-443C-4888-8FE1-7722516D8370}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93D7465F-443C-4888-8FE1-7722516D8370}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -32,6 +38,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{015E8C54-07ED-44AD-AD0E-3B26BEA09FCA} = {D17E47CA-A43F-4ECE-BA30-98720BFCB5D2}
 		{B63080BB-306F-4D7F-BA10-7396C9BDC249} = {D17E47CA-A43F-4ECE-BA30-98720BFCB5D2}
+		{93D7465F-443C-4888-8FE1-7722516D8370} = {8578A011-D909-4F1B-866C-61B9CB8BBD71}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D6022851-BCD8-4367-9A2C-B1DC83C93764}
