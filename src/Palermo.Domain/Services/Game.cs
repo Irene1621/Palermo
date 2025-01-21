@@ -20,6 +20,12 @@ namespace Palermo.Models
         public Dictionary<Player, RoleType> Roles { get; set; }
         public string Winner {  get; set; }
 
+        /// <summary>
+        /// Sets up the game by assigning roles randomly.
+        /// </summary>
+        /// <param name="numberOfPlayers"></param>
+        /// <param name="playerNames"></param>
+        /// <returns>Error if the number of players is less than 5</returns>
         public string InitializeGame(int numberOfPlayers, List<string> playerNames)
         {
             //Sets up the game by assigning roles randomly.
@@ -67,6 +73,11 @@ namespace Palermo.Models
             }
         }
 
+        /// <summary>
+        /// Starts the main game loop, alternating between Day and Night phases.
+        /// </summary>
+        /// <param name="playersNum"></param>
+        /// <param name="names"></param>
         public void Start(int playersNum, List<string> names)
         {
             //Starts the main game loop, alternating between Day and Night phases.
@@ -89,18 +100,28 @@ namespace Palermo.Models
             }
         }
 
+        /// <summary>
+        /// Handles all actions for the Night phase.
+        /// </summary>
         public void ExecuteNightPhase()
         {
             //Handles all actions for the Night phase.
             CurrentPhase = GamePhase.Night;
         }
 
+        /// <summary>
+        /// Handles voting and discussions for the Day phase.
+        /// </summary>
         public void ExecuteDayPhase()
         {
             //Handles voting and discussions for the Day phase.
             CurrentPhase = GamePhase.Day;
         }
 
+        /// <summary>
+        /// Determines if the game has ended and which side has won.
+        /// </summary>
+        /// <returns>true if there is a winner and who won, and false if nobody has won yet</returns>
         public bool IsThereAWinnerYet()
         {
             //Determines if the game has ended and which side has won.
@@ -120,6 +141,9 @@ namespace Palermo.Models
             }
         }
 
+        /// <summary>
+        /// Shows the final roles and outcome of the game.
+        /// </summary>
         public void DisplayResults()
         {
             //Shows the final roles and outcome of the game.

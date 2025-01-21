@@ -13,6 +13,11 @@ namespace Palermo.Models
         public Dictionary<int, int> Votes { get; set; }
         public Dictionary<int, int> Players { get; set; }
 
+        /// <summary>
+        /// Records a vote from one player to another.
+        /// </summary>
+        /// <param name="voterId"></param>
+        /// <param name="targetId"></param>
         public void CastVote(int voterId, int targetId)
         {
             //Records a vote from one player to another.
@@ -27,6 +32,9 @@ namespace Palermo.Models
             }
         }
 
+        /// <summary>
+        /// Determines the player with the most votes.
+        /// </summary>
         public void GetEliminatedPlayerId()
         {
             //Determines the player with the most votes.
