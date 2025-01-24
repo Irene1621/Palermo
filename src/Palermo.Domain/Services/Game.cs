@@ -60,7 +60,7 @@ namespace Palermo.Models
                 {
                     var citizen = utils.GetRandomPlayer(shuffledListPlayers);
                     Roles.Add(citizen, RoleType.Citizen);
-                    Players.Remove(citizen);
+                    shuffledListPlayers.Remove(citizen);
                     remainingPlayers -= 1;
                 }
                 error = string.Empty;
@@ -107,6 +107,7 @@ namespace Palermo.Models
         {
             //Handles all actions for the Night phase.
             CurrentPhase = GamePhase.Night;
+
         }
 
         /// <summary>
@@ -116,6 +117,7 @@ namespace Palermo.Models
         {
             //Handles voting and discussions for the Day phase.
             CurrentPhase = GamePhase.Day;
+            StartVoting();
         }
 
         /// <summary>
@@ -149,6 +151,19 @@ namespace Palermo.Models
             //Shows the final roles and outcome of the game.
 
             var results = $"Here are the final results: \r\n Total number of rounds:{RoundCount} \r\n Winner:{Winner}";
+        }
+
+        public void StartVoting()
+        {
+            Vote vote = new Vote();
+
+            for (int i = 0; i < Players.Count; i++)
+            {
+                var player = Players[i];
+                vote.CastVote(player.Id,);
+            }
+
+            vote.GetEliminatedPlayerId();
         }
     }
 }
