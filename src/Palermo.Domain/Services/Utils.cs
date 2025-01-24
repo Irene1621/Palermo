@@ -47,5 +47,21 @@ namespace Palermo.Models
 
             return shuffledList;
         }
+
+
+        public List<T> ShuffleList2<T>(List<T> list)
+        {
+            var listCopy = list;
+
+            for (int i = 0; i < listCopy.Count; i++)
+            {
+                var lastIndex = listCopy.Count - 1;
+                Random random = new Random();
+                var randomItem = random.Next(0, listCopy.Count);
+                listCopy[lastIndex] = listCopy[randomItem];
+                listCopy[randomItem] = listCopy[lastIndex];
+            }
+            return listCopy;
+        }
     }
 }
