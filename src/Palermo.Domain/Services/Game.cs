@@ -8,10 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Palermo.Domain;
 using Palermo.Enums;
+using Palermo.Models;
 
-namespace Palermo.Models
+namespace Palermo.Services
 {
-    internal class Game
+    public class Game
     {
 
         public List<Player> Players { get; set; }
@@ -20,58 +21,6 @@ namespace Palermo.Models
         public Dictionary<Player, RoleType> Roles { get; set; }
         public string Winner {  get; set; }
 
-        /// <summary>
-        /// Sets up the game by assigning roles randomly.
-        /// </summary>
-        /// <param name="numberOfPlayers"></param>
-        /// <param name="playerNames"></param>
-        /// <returns>Error if the number of players is less than 5</returns>
-        public string InitializeGame(int numberOfPlayers, List<string> playerNames)
-        {
-            //Sets up the game by assigning roles randomly.
-            Utils utils = new Utils();
-            CurrentPhase = GamePhase.Day;
-            var error = string.Empty;
-
-            if (numberOfPlayers > 5)
-            {
-                var remainingPlayers = numberOfPlayers;
-                var shuffledListPlayers = utils.ShuffleList(Players);
-
-                //Picks a random player
-                //Adds him to the list Roles and defines him as detective
-                //Removes him from the shuffled list
-                //Calculates remaining players
-                var detectivePlayer = utils.GetRandomPlayer(shuffledListPlayers);
-                Roles.Add(detectivePlayer, RoleType.Detective);
-                shuffledListPlayers.Remove(detectivePlayer);
-                remainingPlayers -= 1;
-
-                //Defines the mafia players
-                for (int i = 0; i < 2; i++)
-                {
-                    var mafiaPlayer = utils.GetRandomPlayer(shuffledListPlayers);
-                    Roles.Add(mafiaPlayer, RoleType.Mafia);
-                    shuffledListPlayers.Remove(mafiaPlayer);
-                    remainingPlayers -= 1;
-                }
-                //Defines the citizens
-                for (int i = 0; i < remainingPlayers; i++)
-                {
-                    var citizen = utils.GetRandomPlayer(shuffledListPlayers);
-                    Roles.Add(citizen, RoleType.Citizen);
-                    shuffledListPlayers.Remove(citizen);
-                    remainingPlayers -= 1;
-                }
-                error = string.Empty;
-                return error;
-            }
-            else
-            {
-                error = "The number of players should be at least 5";
-                return error;
-            }
-        }
 
         /// <summary>
         /// Starts the main game loop, alternating between Day and Night phases.
@@ -80,8 +29,9 @@ namespace Palermo.Models
         /// <param name="names"></param>
         public void Start(int playersNum, List<string> names)
         {
-            //Starts the main game loop, alternating between Day and Night phases.
-            InitializeGame(playersNum, names);
+            AssignRoles(playersNum, names);
+            CurrentPhase = GamePhase.Day;
+
             for (RoundCount = 0; RoundCount < 10; RoundCount++)
             {
                 while (CurrentPhase == GamePhase.Day)
@@ -105,7 +55,6 @@ namespace Palermo.Models
         /// </summary>
         public void ExecuteNightPhase()
         {
-            //Handles all actions for the Night phase.
             CurrentPhase = GamePhase.Night;
 
         }
@@ -115,9 +64,7 @@ namespace Palermo.Models
         /// </summary>
         public void ExecuteDayPhase()
         {
-            //Handles voting and discussions for the Day phase.
             CurrentPhase = GamePhase.Day;
-            StartVoting();
         }
 
         /// <summary>
@@ -126,7 +73,6 @@ namespace Palermo.Models
         /// <returns>true if there is a winner and who won, and false if nobody has won yet</returns>
         public bool IsThereAWinnerYet()
         {
-            //Determines if the game has ended and which side has won.
             if(Roles.Where(x => x.Value == RoleType.Mafia).Count() == 0)
             {
                 Winner = "Villagers";
@@ -148,22 +94,60 @@ namespace Palermo.Models
         /// </summary>
         public void DisplayResults()
         {
-            //Shows the final roles and outcome of the game.
 
             var results = $"Here are the final results: \r\n Total number of rounds:{RoundCount} \r\n Winner:{Winner}";
         }
 
-        public void StartVoting()
+        /// <summary>
+        /// Assigns roles randomly
+        /// </summary>
+        /// <param name="numberOfPlayers"></param>
+        /// <param name="playerNames"></param>
+        /// <returns></returns>
+        public string AssignRoles(int numberOfPlayers, List<string> playerNames)
         {
-            Vote vote = new Vote();
+            Utils utils = new Utils();
+            var error = string.Empty;
 
-            for (int i = 0; i < Players.Count; i++)
+            if (numberOfPlayers > 5)
             {
-                var player = Players[i];
-                vote.CastVote(player.Id,);
-            }
+                var remainingPlayers = numberOfPlayers;
 
-            vote.GetEliminatedPlayerId();
+                var detective = new Detective();
+                Players.Add(detective);
+                remainingPlayers -= 1;
+
+                for (int i = 0; i < 2; i++)
+                {
+                    var mafia = new Mafia();
+                    Players.Add(mafia);
+                    remainingPlayers -= 1;
+                }
+                for (int i = 0; i < remainingPlayers; i++)
+                {
+                    var citizen = new Citizen();
+                    Players.Add(citizen);
+                    remainingPlayers -= 1;
+                }
+
+                var shuffledListPlayers = utils.ShuffleList(Players);
+                Random random = new Random();
+                for (int i = 0; i < playerNames.Count; i++)
+                {
+                    var randomPlayerName = playerNames[i];
+                    var randomPlayer = utils.GetRandomPlayer(shuffledListPlayers);
+                    Roles.Add(randomPlayer, randomPlayer.Role);
+                    randomPlayer.Name = randomPlayerName;
+                    shuffledListPlayers.Remove(randomPlayer);
+                }
+                error = string.Empty;
+                return error;
+            }
+            else
+            {
+                error = "The number of players should be at least 5";
+                return error;
+            }
         }
     }
 }
