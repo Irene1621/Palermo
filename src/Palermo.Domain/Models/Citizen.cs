@@ -3,12 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Palermo.Models;
+using Palermo.Domain;
+using Palermo.Services;
+using Palermo.Enums;
 
-namespace Palermo.Domain
+namespace Palermo.Models
 {
     internal class Citizen : Player
     {
+        public Citizen()
+        {
+             Role = RoleType.Citizen;
+        }
         public override void PerformNightAction(Game game)
         {
             //Does nothing (no special night actions)

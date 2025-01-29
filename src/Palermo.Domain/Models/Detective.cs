@@ -4,12 +4,18 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Palermo.Models;
+using Palermo.Domain;
+using Palermo.Services;
+using Palermo.Enums;
 
-namespace Palermo.Domain
+namespace Palermo.Models
 {
     internal class Detective : Player
     {
+        public Detective()
+        {
+             Role = RoleType.Detective;
+        }
         public override void PerformNightAction(Game game)
         {
             //Detective investigates a player's role
