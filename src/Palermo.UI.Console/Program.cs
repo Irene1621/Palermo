@@ -13,7 +13,7 @@ namespace Palermo.Domain
     internal class Program
     {
         Game game = new Game();
-        public List<string> playersNames { get; set; }
+        public List<string> playersNames { get; set; } = [];
 
         public static void Main()
         {
@@ -65,6 +65,7 @@ namespace Palermo.Domain
 
         public void StartGame()
         {
+            Vote vote1 = new Vote();
             Console.Clear();
             Console.WriteLine("Welcome to Palermo! Please enter the number of players:");
             var numberOfPlayers = Console.ReadLine();
@@ -79,6 +80,23 @@ namespace Palermo.Domain
             }
 
             game.Start(result, playersNames);
+            for (int i = 0; i < result; i++)
+            {
+                var name = playersNames[i];
+                Console.WriteLine($"{name}, who do you want to vote?");
+                var vote = Console.ReadLine();
+                var voter = FindPlayer(name);
+                var player = FindPlayer(vote);
+                if (player != null && voter != null)
+                {
+                    vote1.CastVote(voter.Id,player.Id);
+                }
+                else
+                {
+                    Console.WriteLine("Player not found");
+                }
+                    
+            }
             Console.WriteLine("\r\nPress any key to return to menu");
             Console.ReadLine();
             Menu();
@@ -91,6 +109,25 @@ namespace Palermo.Domain
             Console.WriteLine("\r\nPress any key to return to menu");
             Console.ReadLine();
             Menu();
+        }
+
+        /// <summary>
+        /// Searches for a player by name and returns him if found.
+        /// </summary>
+        /// <param name="playerName"></param>
+        /// <returns></returns>
+        public Player? FindPlayer(string playerName)
+        {
+            for (int i = 0; i < game.Players.Count; i++)
+            {
+                var player = game.Players[i];
+
+                if (player.Name.Contains(playerName))
+                {
+                    return player;
+                }
+            }
+            return null;
         }
     }
 }
