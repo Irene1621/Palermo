@@ -12,9 +12,10 @@ namespace Palermo.Models
 {
     internal class Detective : Player
     {
-        public Detective()
+        public Detective(string name)
         {
-             Role = RoleType.Detective;
+            Role = RoleType.Detective;
+            Name = name;    
         }
         public override void PerformNightAction(Game game)
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.Versioning;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,10 +16,10 @@ namespace Palermo.Services
     public class Game
     {
 
-        public List<Player> Players { get; set; }
+        public List<Player> Players { get; set; } = [];
         public GamePhase CurrentPhase { get; set; }
         public int RoundCount { get; set; }
-        public Dictionary<Player, RoleType> Roles { get; set; }
+        public Dictionary<Player, RoleType> Roles { get; set; } = [];
         public string Winner {  get; set; }
 
 
@@ -27,9 +28,9 @@ namespace Palermo.Services
         /// </summary>
         /// <param name="playersNum"></param>
         /// <param name="names"></param>
-        public void Start(int playersNum, List<string> names)
+        public void Start(int playersNumber, List<string> names)
         {
-            AssignRoles(playersNum, names);
+            AssignRoles(playersNumber, names);
             CurrentPhase = GamePhase.Day;
 
             for (RoundCount = 0; RoundCount < 10; RoundCount++)
@@ -108,37 +109,35 @@ namespace Palermo.Services
         {
             Utils utils = new Utils();
             var error = string.Empty;
+            var remainingPlayers = numberOfPlayers;
+            var shuffledListNames = utils.ShuffleList(playerNames);
 
+            
             if (numberOfPlayers > 5)
             {
-                var remainingPlayers = numberOfPlayers;
-
-                var detective = new Detective();
-                Players.Add(detective);
-                remainingPlayers -= 1;
-
-                for (int i = 0; i < 2; i++)
+                for (int i = 0; i <= shuffledListNames.Count; i++)
                 {
-                    var mafia = new Mafia();
-                    Players.Add(mafia);
+                    var name = shuffledListNames[i];
+                    var detective = new Detective(name);
+                    Players.Add(detective);
                     remainingPlayers -= 1;
-                }
-                for (int i = 0; i < remainingPlayers; i++)
-                {
-                    var citizen = new Citizen();
-                    Players.Add(citizen);
-                    remainingPlayers -= 1;
-                }
+                    shuffledListNames.Remove(name);
 
-                var shuffledListPlayers = utils.ShuffleList(Players);
-                Random random = new Random();
-                for (int i = 0; i < playerNames.Count; i++)
-                {
-                    var randomPlayerName = playerNames[i];
-                    var randomPlayer = utils.GetRandomPlayer(shuffledListPlayers);
-                    Roles.Add(randomPlayer, randomPlayer.Role);
-                    randomPlayer.Name = randomPlayerName;
-                    shuffledListPlayers.Remove(randomPlayer);
+                    for (int x = 0; x < 2; x++)
+                    {
+                        var mafia = new Mafia(name);
+                        Players.Add(mafia);
+                        remainingPlayers -= 1;
+                        shuffledListNames.Remove(name);
+                    }
+
+                    for(int y = 0; y < remainingPlayers + 1; y++)
+                    {
+                         var citizen = new Citizen(name);
+                         Players.Add(citizen);
+                         remainingPlayers -= 1;
+                         shuffledListNames.Remove(name);
+                    }
                 }
                 error = string.Empty;
                 return error;

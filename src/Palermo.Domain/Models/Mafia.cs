@@ -11,9 +11,10 @@ namespace Palermo.Models;
 
     internal class Mafia : Player
     {
-    public Mafia()
+    public Mafia(string name)
     {
         Role = RoleType.Mafia;
+        Name = name;
     }
     public override void PerformNightAction(Game game)
         {
