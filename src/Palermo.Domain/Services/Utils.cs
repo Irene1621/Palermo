@@ -5,8 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Palermo.Domain;
+using Palermo.Enums;
+using Palermo.Models;
 
-namespace Palermo.Models
+namespace Palermo.Services
 {
     internal class Utils
     {
@@ -19,7 +21,9 @@ namespace Palermo.Models
         {
             //Selects a random player from the list.
             Random random = new Random();
-            var randomInt = random.Next(0, players.Count);
+            var playersCount = players.Count;
+            playersCount -= 1;
+            var randomInt = random.Next(0, playersCount);
             Player player = players[randomInt];
             return player;
         }
@@ -51,15 +55,21 @@ namespace Palermo.Models
 
         public List<T> ShuffleList2<T>(List<T> list)
         {
-            var listCopy = list;
+            var listCopy = new List<T>();
+            for (int i = 0; i < list.Count; i++)
+            {
+                var item = list[i];
+                listCopy.Add(item);
+            }
 
             for (int i = 0; i < listCopy.Count; i++)
             {
                 var lastIndex = listCopy.Count - 1;
                 Random random = new Random();
                 var randomItem = random.Next(0, listCopy.Count);
-                listCopy[lastIndex] = listCopy[randomItem];
+                var randomItemValue = listCopy[randomItem];
                 listCopy[randomItem] = listCopy[lastIndex];
+                listCopy[lastIndex] = randomItemValue;
             }
             return listCopy;
         }
