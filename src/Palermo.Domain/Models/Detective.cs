@@ -16,6 +16,7 @@ namespace Palermo.Models
         {
             Role = RoleType.Detective;
             Name = name;    
+            IsAlive = true;
         }
         public override void PerformNightAction(Game game)
         {

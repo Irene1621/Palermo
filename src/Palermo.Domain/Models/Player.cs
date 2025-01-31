@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Palermo.Domain;
+using Palermo.Services;
 using Palermo.Enums;
-using Palermo.Models;
 
-namespace Palermo.Domain
+namespace Palermo.Models
 {
     public abstract class Player
     {

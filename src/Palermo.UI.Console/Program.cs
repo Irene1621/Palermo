@@ -58,6 +58,8 @@ namespace Palermo.Domain
                     case 3:
                         //Exit
                         break;
+                    default:
+                        break;
                 }
 
             }
@@ -70,33 +72,93 @@ namespace Palermo.Domain
             Console.WriteLine("Welcome to Palermo! Please enter the number of players:");
             var numberOfPlayers = Console.ReadLine();
             int.TryParse(numberOfPlayers, out int result);
-
-            Console.Clear();
-            for (int i = 0; i < result; i++)
+            if (result >= 5)
             {
-                Console.WriteLine("Enter name:");
-                var playerName = Console.ReadLine();
-                playersNames.Add(playerName);
-            }
+                Console.Clear();
+                for (int i = 1; i <= result; i++)
+                {
+                    Console.WriteLine("Enter name:");
+                    var playerName = Console.ReadLine();
+                    playersNames.Add(playerName);
+                }
 
-            game.Start(result, playersNames);
-            for (int i = 0; i < result; i++)
-            {
-                var name = playersNames[i];
-                Console.WriteLine($"{name}, who do you want to vote?");
-                var vote = Console.ReadLine();
-                var voter = FindPlayer(name);
-                var player = FindPlayer(vote);
-                if (player != null && voter != null)
+                game.Start(result, playersNames);
+
+                for (int i = 0; i < playersNames.Count; i++)
                 {
-                    vote1.CastVote(voter.Id,player.Id);
+                    Console.Clear();
+                    var name = playersNames[i];
+                    Console.WriteLine($"{name}\r\nPress any key to reveal role");
+                    Console.ReadLine();
+                    var player = FindPlayer(name);
+                    Console.WriteLine(player.Role);
+                    Console.WriteLine("Next player");
+                    Console.ReadLine();
                 }
-                else
+                Console.Clear();
+
+                for (game.RoundCount = 0; game.RoundCount < 10; game.RoundCount++)
                 {
-                    Console.WriteLine("Player not found");
+                    while (game.CurrentPhase == GamePhase.Day)
+                    {
+                        game.ExecuteDayPhase();
+                        for (int i = 0; i < result; i++)
+                        {
+                            var name = playersNames[i];
+                            Console.WriteLine($"{name}, who do you want to vote?");
+                            var vote = Console.ReadLine();
+                            var voter = FindPlayer(name);
+                            var player = FindPlayer(vote);
+                            if (player != null && voter != null)
+                            {
+                                vote1.CastVote(voter.Id, player.Id);
+                                Console.WriteLine("Next player");
+                                Console.ReadLine();
+                                Console.Clear();
+                            }
+                            else
+                            {
+                                Console.WriteLine("Player not found");
+                            }
+
+                        }
+                        //var eliminatedPlayerId = vote1.GetEliminatedPlayerId();
+                        //int.TryParse(eliminatedPlayerId, out int playerId);
+                        //FindPlayerById(playerId);
+
+                        var isThereAWinnerYet = game.IsThereAWinnerYet();
+                        if (isThereAWinnerYet == true)
+                        {
+                            game.DisplayResults();
+                        }
+                        else
+                        {
+                            game.ExecuteNightPhase();
+                            Console.WriteLine("Night falls in Palermo. All the players close their eyes. Press any key to begin night phase");
+                            Console.ReadLine();
+                            Console.WriteLine($"Mafia players open your eyes. Who do you want to vote?");
+                            var playerKilled = Console.ReadLine();
+                            var player = FindPlayer(playerKilled);
+                            player.IsAlive = false;
+                            Console.WriteLine("Mafia players close your eyes.");
+                            Console.ReadLine();
+                            Console.WriteLine("Day comes in Palermo again. All the players open their eyes.\r\nPress any key to reveal the player the mafia killed");
+                            Console.ReadLine();
+                            Console.WriteLine($"{playerKilled} you have been murdered.");
+                            game.ExecuteDayPhase();
+
+
+                        }
+                    }
                 }
-                    
+               
+                
             }
+            else
+            {
+                Console.WriteLine("The number of players should be at least 5");
+            }
+            
             Console.WriteLine("\r\nPress any key to return to menu");
             Console.ReadLine();
             Menu();
@@ -123,6 +185,20 @@ namespace Palermo.Domain
                 var player = game.Players[i];
 
                 if (player.Name.Contains(playerName))
+                {
+                    return player;
+                }
+            }
+            return null;
+        }
+
+        public Player? FindPlayerById(int playerId)
+        {
+            for (int i = 0; i < game.Players.Count; i++)
+            {
+                var player = game.Players[i];
+
+                if (player.Id == playerId)
                 {
                     return player;
                 }

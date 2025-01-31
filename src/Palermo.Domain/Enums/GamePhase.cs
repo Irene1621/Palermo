@@ -1,4 +1,4 @@
-﻿namespace Palermo.Models
+﻿namespace Palermo.Enums
 {
    public enum GamePhase
    {

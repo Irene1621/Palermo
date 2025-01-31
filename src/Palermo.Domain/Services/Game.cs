@@ -20,7 +20,7 @@ namespace Palermo.Services
         public GamePhase CurrentPhase { get; set; }
         public int RoundCount { get; set; }
         public Dictionary<Player, RoleType> Roles { get; set; } = [];
-        public string Winner {  get; set; }
+        public string Winner { get; set; }
 
 
         /// <summary>
@@ -33,22 +33,6 @@ namespace Palermo.Services
             AssignRoles(playersNumber, names);
             CurrentPhase = GamePhase.Day;
 
-            for (RoundCount = 0; RoundCount < 10; RoundCount++)
-            {
-                while (CurrentPhase == GamePhase.Day)
-                {
-                    ExecuteDayPhase();
-                    var result = IsThereAWinnerYet();
-                    if (result == true)
-                    {
-                        DisplayResults();
-                    }
-                    else
-                    {
-                        ExecuteNightPhase();
-                    }
-                }
-            }
         }
 
         /// <summary>
@@ -74,12 +58,12 @@ namespace Palermo.Services
         /// <returns>true if there is a winner and who won, and false if nobody has won yet</returns>
         public bool IsThereAWinnerYet()
         {
-            if(Roles.Where(x => x.Value == RoleType.Mafia).Count() == 0)
+            if (Roles.Where(x => x.Value == RoleType.Mafia).Count() == 0)
             {
                 Winner = "Villagers";
                 return true;
             }
-            else if(Roles.Where(x => x.Value == RoleType.Detective).Count() == 0)
+            else if (Roles.Where(x => x.Value == RoleType.Detective).Count() == 0)
             {
                 Winner = "Mafia";
                 return true;
@@ -105,47 +89,49 @@ namespace Palermo.Services
         /// <param name="numberOfPlayers"></param>
         /// <param name="playerNames"></param>
         /// <returns></returns>
-        public string AssignRoles(int numberOfPlayers, List<string> playerNames)
+        public void AssignRoles(int numberOfPlayers, List<string> playerNames)
         {
+            if (numberOfPlayers != playerNames.Count || numberOfPlayers < 5)
+            {
+                throw new ArgumentException("Number of players should be at least five or number of players isn't equal to the players names list count");
+            }
+
             Utils utils = new Utils();
             var error = string.Empty;
             var remainingPlayers = numberOfPlayers;
-            var shuffledListNames = utils.ShuffleList(playerNames);
+            var shuffledListNames = utils.ShuffleList2(playerNames);
 
-            
-            if (numberOfPlayers > 5)
+
+            for (int i = 0; i <= shuffledListNames.Count; i++)
             {
-                for (int i = 0; i <= shuffledListNames.Count; i++)
+                var name = shuffledListNames[i];
+                var detective = new Detective(name);
+                Players.Add(detective);
+                remainingPlayers -= 1;
+                shuffledListNames.Remove(name);
+
+                for (int x = 0; x < 2; x++)
                 {
-                    var name = shuffledListNames[i];
-                    var detective = new Detective(name);
-                    Players.Add(detective);
+                    var name2 = shuffledListNames[i];
+                    var mafia = new Mafia(name2);
+                    Players.Add(mafia);
                     remainingPlayers -= 1;
-                    shuffledListNames.Remove(name);
-
-                    for (int x = 0; x < 2; x++)
-                    {
-                        var mafia = new Mafia(name);
-                        Players.Add(mafia);
-                        remainingPlayers -= 1;
-                        shuffledListNames.Remove(name);
-                    }
-
-                    for(int y = 0; y < remainingPlayers + 1; y++)
-                    {
-                         var citizen = new Citizen(name);
-                         Players.Add(citizen);
-                         remainingPlayers -= 1;
-                         shuffledListNames.Remove(name);
-                    }
+                    shuffledListNames.Remove(name2);
                 }
-                error = string.Empty;
-                return error;
+
+                for (int y = 0; y < remainingPlayers + 1; y++)
+                {
+                    var name3 = shuffledListNames[i];
+                    var citizen = new Citizen(name3);
+                    Players.Add(citizen);
+                    remainingPlayers -= 1;
+                    shuffledListNames.Remove(name3);
+                }
             }
-            else
+            for (int i = 0; i < Players.Count; i++)
             {
-                error = "The number of players should be at least 5";
-                return error;
+                var player = Players[i];
+                player.Id = i;
             }
         }
     }

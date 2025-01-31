@@ -6,19 +6,21 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using Palermo.Enums;
+using Palermo.Models;
 
-namespace Palermo.Models
+namespace Palermo.Services
 {
-    internal class Vote
+    public class Vote
     {
-        public Dictionary<int, int> Votes { get; set; }
-        public Dictionary<int, int> Players { get; set; }
+        public Dictionary<int, int> Votes { get; set; } = [];
+        public Dictionary<int, int> Players { get; set; } = [];
 
         /// <summary>
         /// Records a vote from one player to another.
         /// </summary>
         /// <param name="voterId"></param>
-        /// <param name="targetId"></param>
+        /// <param name="playerId"></param>
         public void CastVote(int voterId, int playerId)
         {
             //Records a vote from one player to another.
@@ -29,7 +31,7 @@ namespace Palermo.Models
             }
             else
             {
-            Players.Add(targetId, 1);
+            Players.Add(playerId, 1);
             }
         }
 

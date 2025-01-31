@@ -7,4 +7,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Palermo.Domain\Palermo.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
