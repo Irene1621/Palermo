@@ -21,6 +21,7 @@ namespace Palermo.Services
         public int RoundCount { get; set; }
         public Dictionary<Player, RoleType> Roles { get; set; } = [];
         public string Winner { get; set; }
+        public List<int> PlayersId { get; set; } = [];
 
 
         /// <summary>
@@ -30,6 +31,7 @@ namespace Palermo.Services
         /// <param name="names"></param>
         public void Start(int playersNumber, List<string> names)
         {
+            GeneratePlayersId();
             AssignRoles(playersNumber, names);
             CurrentPhase = GamePhase.Day;
 
@@ -105,7 +107,8 @@ namespace Palermo.Services
             for (int i = 0; i <= shuffledListNames.Count; i++)
             {
                 var name = shuffledListNames[i];
-                var detective = new Detective(name);
+                var detectiveId = PickId();
+                var detective = new Detective(detectiveId, name);
                 Players.Add(detective);
                 remainingPlayers -= 1;
                 shuffledListNames.Remove(name);
@@ -113,7 +116,8 @@ namespace Palermo.Services
                 for (int x = 0; x < 2; x++)
                 {
                     var name2 = shuffledListNames[i];
-                    var mafia = new Mafia(name2);
+                    var mafiaId = PickId();
+                    var mafia = new Mafia(mafiaId, name2);
                     Players.Add(mafia);
                     remainingPlayers -= 1;
                     shuffledListNames.Remove(name2);
@@ -122,17 +126,48 @@ namespace Palermo.Services
                 for (int y = 0; y < remainingPlayers + 1; y++)
                 {
                     var name3 = shuffledListNames[i];
-                    var citizen = new Citizen(name3);
+                    var citizenId = PickId();
+                    var citizen = new Citizen(citizenId, name3);
                     Players.Add(citizen);
                     remainingPlayers -= 1;
                     shuffledListNames.Remove(name3);
                 }
             }
+        }
+
+        /// <summary>
+        /// Searches for a player by name and returns him if found.
+        /// </summary>
+        /// <param name="playerName"></param>
+        /// <returns></returns>
+        public Player? FindPlayer(string playerName)
+        {
             for (int i = 0; i < Players.Count; i++)
             {
                 var player = Players[i];
-                player.Id = i;
+
+                if (player.Name.Contains(playerName))
+                {
+                    return player;
+                }
             }
+            return null;
+        }
+
+        public void GeneratePlayersId()
+        {
+            for (int i = 0; i < Players.Count; i++)
+            {
+                PlayersId.Add(i);
+            }
+        }
+
+        public int PickId()
+        {
+            Random random = new Random();
+            var randomId = random.Next(0, PlayersId.Count);
+            PlayersId.Remove(randomId);
+            return randomId;
         }
     }
 }
