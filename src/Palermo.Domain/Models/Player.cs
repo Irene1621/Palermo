@@ -12,40 +12,60 @@ namespace Palermo.Models
     public abstract class Player
     {
 
-        public int Id { get; set; }
-        public string Name { get; set; }
+        public int Id { get; private set; }
+        public string Name { get; private set; }
         public bool IsAlive { get; set; }
-        public RoleType Role { get; set; }
-        public int Votes { get; set; }
+        public RoleType Role { get; private set; }
+        public int Votes { get; private set; }
+        public bool HasPlayerVoted { get; private set; }
 
+        protected Player(int id, string name, RoleType role)
+        {
+            Id = id;
+            Name = name;
+            Role = role;
+            IsAlive = true;
+            Votes = 0;
+            HasPlayerVoted = false;
+        }
         public abstract void PerformNightAction(Game game);
 
-        public void ReceiveInfo(string info)
+
+        public void AddVote()
         {
-            //Allows the player to receive information
+            Votes++;
         }
 
-        public void AddVote(Player player)
+        public void Eliminate()
         {
-            player.Votes++;
+            IsAlive = false;
         }
 
-        public void EliminatePlayer(Player player)
+        public void Vote(Player target)
         {
-            player.IsAlive = false;
+            if (!target.IsAlive) 
+            { 
+                throw new Exception("The player you want to vote isn't alive");
+            }
+
+            if (target.Name == Name) 
+            { 
+                throw new Exception("Player can't vote for themselves");
+            }
+            if (HasPlayerVoted == true)
+            {
+                throw new Exception("Player has already voted");
+            }
+            target.AddVote();
+            HasPlayerVoted = true;
         }
 
-        public void Vote(Player voter, Player target )
+        public void ResetVotes()
         {
-            AddVote(target);
-            voter.HasPlayerVoted = true;
+            Votes = 0;
+            HasPlayerVoted = false;
         }
 
-        public void ResetVotes(Player player)
-        {
-            player.Votes = 0;
-        }
 
-        public bool HasPlayerVoted {  get; set; }
     }
 }

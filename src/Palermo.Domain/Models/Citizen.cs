@@ -11,11 +11,9 @@ namespace Palermo.Models
 {
     internal class Citizen : Player
     {
-        public Citizen(string name)
+        public Citizen(int id, string name) : base (id, name, RoleType.Citizen)
         {
-            Role = RoleType.Citizen;
-            Name = name;
-            IsAlive = true;
+
         }
         public override void PerformNightAction(Game game)
         {
