@@ -80,21 +80,19 @@ namespace Palermo.Domain
 
             for (game.RoundCount = 0; game.RoundCount < 10; game.RoundCount++)
             {
-                while (game.CurrentPhase == GamePhase.Day)
-                {
                     StartVoting();
-
+                
                     var isThereAWinnerYet = game.IsThereAWinnerYet();
                     if (isThereAWinnerYet == true)
                     {
-                        game.DisplayResults();
+                        var results = game.DisplayResults();
+                        Console.WriteLine();
                     }
                     else
                     {
-                       StartNightPhase();
-                       game.ExecuteDayPhase();
+                        StartNightPhase();
+                        game.ExecuteDayPhase();
 
-                    }
                 }
             }
             Console.WriteLine("\r\nPress any key to return to menu");
@@ -154,15 +152,22 @@ namespace Palermo.Domain
         public void StartVoting()
         {
             game.ExecuteDayPhase();
-            foreach (var name in PlayersNames) 
+            for (int i = 0; i < PlayersNames.Count; i++) 
             {
+                var name = PlayersNames[i];
                 Console.WriteLine($"{name}, who do you want to vote?");
                 var vote = Console.ReadLine();
                 var voter = game.FindPlayer(name);
                 var player = game.FindPlayer(vote);
                 if (player != null && voter != null)
                 {
-                    VotingService.StartVotingService(voter, player, Players);
+                    var result = VotingService.StartVotingService(voter, player, Players);
+                    if (result != null)
+                    {
+                        Console.WriteLine($"{result.Name} you have been eliminated");
+                        PlayersNames.Remove(result.Name);
+                    }
+                    
                     Console.WriteLine("Next player");
                     Console.ReadLine();
                     Console.Clear();
@@ -180,19 +185,33 @@ namespace Palermo.Domain
             game.ExecuteNightPhase();
             Console.WriteLine("Night falls in Palermo. All the players close their eyes. Press any key to begin night phase");
             Console.ReadLine();
+            Console.Clear();
             Console.WriteLine($"Mafia players open your eyes. Who do you want to vote?");
-            var playerKilled = Console.ReadLine();
-            var player = game.FindPlayer(playerKilled);
-            if ( player != null && playerKilled != null)
+            bool FoundPlayer = false;
+            while (FoundPlayer == false)
             {
-                player.IsAlive = false;
-                Console.WriteLine("Mafia players close your eyes.");
-                Console.ReadLine();
-                Console.WriteLine("Day comes in Palermo again. All the players open their eyes.\r\nPress any key to reveal the player the mafia killed");
-                Console.ReadLine();
-                Console.WriteLine($"{playerKilled} you have been murdered.");
+                var playerKilled = Console.ReadLine();
+                var player = game.FindPlayer(playerKilled);
+                if (player != null && playerKilled != null)
+                {
+                    FoundPlayer = true;
+                    player.IsAlive = false;
+                    Console.WriteLine("Mafia players close your eyes.");
+                    Console.ReadLine();
+                    Console.Clear();
+                    Console.WriteLine("Day comes in Palermo again. All the players open their eyes.\r\nPress any key to reveal the player the mafia killed");
+                    Console.ReadLine();
+                    Console.WriteLine($"{playerKilled} you have been murdered.");
+                    Console.WriteLine("Press any key to start voting");
+                    Console.ReadLine();
+                    Console.Clear();
+                }
+                else
+                {
+                    Console.WriteLine("Player not found. Please enter a valid name");
+                    FoundPlayer = false;
+                }
             }
-            else { throw new Exception("Player was null"); }
         }
     }
 }
