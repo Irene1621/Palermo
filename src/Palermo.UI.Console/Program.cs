@@ -159,25 +159,35 @@ namespace Palermo.Domain
                 var vote = Console.ReadLine();
                 var voter = game.FindPlayer(name);
                 var player = game.FindPlayer(vote);
-                if (player != null && voter != null)
+                bool FoundPlayer = false;
+                while (FoundPlayer == false)
                 {
-                    var result = VotingService.StartVotingService(voter, player, Players);
-                    if (result != null)
+                    if (player != null && voter != null)
                     {
-                        Console.WriteLine($"{result.Name} you have been eliminated");
-                        PlayersNames.Remove(result.Name);
-                    }
-                    
-                    Console.WriteLine("Next player");
-                    Console.ReadLine();
-                    Console.Clear();
-                }
-                else
-                {
-                    Console.WriteLine("Player not found");
-                }
+                        FoundPlayer = true; 
+                        VotingService.StartVotingService(voter, player, Players);
 
+                        Console.WriteLine("Next player");
+                        Console.ReadLine();
+                        Console.Clear();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Player not found");
+                        FoundPlayer = false;
+                    }
+                }
             }
+            var result = VotingResult.GetVotingResults(Players);
+            //if (result != null)
+            //{
+            Console.WriteLine($"{result.Name} you have been eliminated");
+            PlayersNames.Remove(result.Name);
+            //}
+            //else
+            //{
+
+            //}
         }
 
         public void StartNightPhase()
