@@ -156,12 +156,14 @@ namespace Palermo.Domain
             {
                 var name = PlayersNames[i];
                 Console.WriteLine($"{name}, who do you want to vote?");
-                var vote = Console.ReadLine();
-                var voter = game.FindPlayer(name);
-                var player = game.FindPlayer(vote);
+                
                 bool FoundPlayer = false;
+
                 while (FoundPlayer == false)
                 {
+                    var vote = Console.ReadLine();
+                    var voter = game.FindPlayer(name);
+                    var player = game.FindPlayer(vote);
                     if (player != null && voter != null)
                     {
                         FoundPlayer = true; 
@@ -173,16 +175,16 @@ namespace Palermo.Domain
                     }
                     else
                     {
-                        Console.WriteLine("Player not found");
+                        Console.WriteLine("Player not found. Please enter a valid name");
                         FoundPlayer = false;
                     }
                 }
             }
-            var result = VotingResult.GetVotingResults(Players);
+            var eliminatedPlayer = VotingResult.GetVotingResults(Players);
             //if (result != null)
             //{
-            Console.WriteLine($"{result.Name} you have been eliminated");
-            PlayersNames.Remove(result.Name);
+            Console.WriteLine($"{eliminatedPlayer.Name} you have been eliminated");
+            PlayersNames.Remove(eliminatedPlayer.Name);
             //}
             //else
             //{
@@ -205,7 +207,8 @@ namespace Palermo.Domain
                 if (player != null && playerKilled != null)
                 {
                     FoundPlayer = true;
-                    player.IsAlive = false;
+                    player.Eliminate();
+                    PlayersNames.Remove(player.Name);
                     Console.WriteLine("Mafia players close your eyes.");
                     Console.ReadLine();
                     Console.Clear();
