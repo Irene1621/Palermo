@@ -83,18 +83,29 @@ namespace Palermo.Domain
                     StartVoting();
                 
                     var isThereAWinnerYet = game.IsThereAWinnerYet();
-                    if (isThereAWinnerYet == true)
+                if (isThereAWinnerYet == true)
+                {
+                    var results = game.DisplayResults();
+                    Console.WriteLine(results);
+                    break;
+                }
+                else
+                {
+                    StartNightPhase();
+
+                    var isThereAWinnerAfterNightPhase = game.IsThereAWinnerYet();
+
+                    if (isThereAWinnerAfterNightPhase == true)
                     {
                         var results = game.DisplayResults();
-                        Console.WriteLine();
+                        Console.WriteLine(results);
+                        break;
                     }
-                    else
-                    {
-                        StartNightPhase();
-                        game.ExecuteDayPhase();
+                    game.ExecuteDayPhase();
 
                 }
             }
+            ResetGame();
             Console.WriteLine("\r\nPress any key to return to menu");
             Console.ReadLine();
             Menu();
@@ -181,6 +192,7 @@ namespace Palermo.Domain
                 }
             }
             var eliminatedPlayer = VotingResult.GetVotingResults(Players);
+            eliminatedPlayer.Eliminate();
             //if (result != null)
             //{
             Console.WriteLine($"{eliminatedPlayer.Name} you have been eliminated");
@@ -225,6 +237,13 @@ namespace Palermo.Domain
                     FoundPlayer = false;
                 }
             }
+        }
+
+        public void ResetGame()
+        {
+            Players.Clear();
+            PlayersNames.Clear();
+            
         }
     }
 }
