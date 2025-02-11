@@ -8,6 +8,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Palermo.Domain;
+using Palermo.Domain.Services;
 using Palermo.Enums;
 using Palermo.Models;
 
@@ -60,12 +61,12 @@ namespace Palermo.Services
         /// <returns>true if there is a winner and who won, and false if nobody has won yet</returns>
         public bool IsThereAWinnerYet()
         {
-            if (Roles.Where(x => x.Value == RoleType.Mafia).Count() == 0)
+            if (Players.Where(x => x.Role == RoleType.Mafia && x.IsAlive == true).Count() == 0)
             {
                 Winner = "Villagers";
                 return true;
             }
-            else if (Roles.Where(x => x.Value == RoleType.Detective).Count() == 0)
+            else if (Players.Where(x => x.Role == RoleType.Detective && x.IsAlive == true).Count() == 0)
             {
                 Winner = "Mafia";
                 return true;
@@ -79,10 +80,11 @@ namespace Palermo.Services
         /// <summary>
         /// Shows the final roles and outcome of the game.
         /// </summary>
-        public void DisplayResults()
+        public string DisplayResults()
         {
 
             var results = $"Here are the final results: \r\n Total number of rounds:{RoundCount} \r\n Winner:{Winner}";
+            return results;
         }
 
         /// <summary>
