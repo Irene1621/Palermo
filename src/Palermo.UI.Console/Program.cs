@@ -191,7 +191,7 @@ namespace Palermo.Domain
                     }
                 }
             }
-            var eliminatedPlayer = VotingResult.GetVotingResults(Players);
+            var eliminatedPlayer = VotingService.GetVotingResults(Players);
             eliminatedPlayer.Eliminate();
             //if (result != null)
             //{

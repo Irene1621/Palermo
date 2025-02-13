@@ -38,12 +38,7 @@ namespace Palermo.Services
         /// <summary>
         /// Determines the player with the most votes.
         /// </summary>
-        public object GetEliminatedPlayerId()
-        {
-            //Determines the player with the most votes.
-            var eliminatedPlayer = Players.Max();
-            return eliminatedPlayer.Key;
-        }
+       
     }
 }
 

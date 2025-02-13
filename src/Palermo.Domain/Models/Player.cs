@@ -17,7 +17,7 @@ namespace Palermo.Models
         public bool IsAlive { get; set; }
         public RoleType Role { get; private set; }
         public int Votes { get; private set; }
-        public bool HasPlayerVoted { get; private set; }
+        public bool HasPlayerVoted { get; set; }
 
         protected Player(int id, string name, RoleType role)
         {
