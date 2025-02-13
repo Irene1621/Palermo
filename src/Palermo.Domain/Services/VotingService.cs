@@ -11,7 +11,7 @@ namespace Palermo.Domain.Services
 {
     public static class VotingService
     {
-        public static List<Player> PlayersVoted { get; set; } = [];
+       
         public static void StartVotingService(Player voter, Player target, List<Player> players)
         {
             voter.Vote(target);
@@ -19,10 +19,44 @@ namespace Palermo.Domain.Services
             var playersVoted = players.Where(x => x.HasPlayerVoted == true).ToList();
             foreach (var player in playersVoted)
             {
-                PlayersVoted.Add(player);
+                VotingResult.PlayersVoted.Add(player);
             }
 
         }
+
         
+
+        public static Player? GetVotingResults(List<Player> players)
+        {
+
+            VotingResult.AlivePlayers = players.Where(x => x.IsAlive == true).ToList();
+
+            if (VotingResult.AlivePlayers.Count == VotingResult.PlayersVoted.Count)
+            {
+            var eliminatedPlayer = GetEliminatedPlayer(players);
+            foreach (var player in players)
+            {
+                player.ResetVotes();
+            }
+            return eliminatedPlayer;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public static Player GetEliminatedPlayer(List<Player> players)
+        {
+            //Determines the player with the most votes.
+            
+            for (int i = 0; i < players.Count; i++)
+            {
+                var player = players[i];
+                VotingResult.EliminatedPlayer = players.OrderByDescending(x => x.Votes).First();
+            }
+            return VotingResult.EliminatedPlayer;
+        }
+
     } 
 }
