@@ -9,8 +9,10 @@ using Xunit;
 
 namespace Palermo.Tests.Domain.Models
 {
+    [Test Class]
     internal class Player_Tests
     {
+        [Test Method]
         public void AddVoteTest()
         {
             //Arrange

@@ -26,5 +26,33 @@ namespace Palermo.Tests.Domain.Services
             Assert.True(voter.HasPlayerVoted);
             Assert.Contains(voter, VotingResult.PlayersVoted);
         }
+
+        public void ShouldGetVotingResultsTest()
+        {
+            //Arrange
+            var voter = new Citizen(1, "Eirini");
+            var target = new Citizen(2, "Debbie");
+            var players = new List<Player> { voter, target };
+            //Act
+            VotingService.StartVotingService(voter, target, players);
+            VotingService.GetVotingResults(players);
+            //Assert
+            Assert.Equal(0, target.Votes);
+            Assert.Equal(0, voter.Votes);
+            Assert.Equal(target, VotingResult.EliminatedPlayer);
+        }
+
+        public void ShouldGetEliminatedPlayerTest()
+        {
+            //Arrange
+            var voter = new Citizen(1, "Eirini");
+            var target = new Citizen(2, "Debbie");
+            var players = new List<Player> { voter, target };
+            //Act
+            VotingService.StartVotingService(voter, target, players);
+            VotingService.GetEliminatedPlayer(players);
+            //Assert
+            Assert.Equal(target, VotingResult.EliminatedPlayer);
+        }
     }
 }
