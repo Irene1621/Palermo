@@ -10,7 +10,7 @@ using Palermo.Models;
 
 namespace Palermo.Services
 {
-    internal class Utils
+    public class Utils
     {
         /// <summary>
         /// Selects a random player from the list.
@@ -34,23 +34,23 @@ namespace Palermo.Services
         /// <typeparam name="T"></typeparam>
         /// <param name="list"></param>
         /// <returns>the shuffled list</returns>
-        public List<T> ShuffleList<T>(List<T> list)
-        {
-            //Shuffles a list (useful for assigning roles).
-            var listCopy = list;
-            var shuffledList = new List<T>();   
+        //public List<T> ShuffleList<T>(List<T> list)
+        //{
+        //    //Shuffles a list (useful for assigning roles).
+        //    var listCopy = list;
+        //    var shuffledList = new List<T>();   
 
-            Random random = new Random();
-            for (int i = 0; i < listCopy.Count; i++)
-            {
-                var randomInt = random.Next(0, listCopy.Count);
-                var item = listCopy[randomInt];
-                listCopy.Remove(item);
-                shuffledList.Add(item);
-            }
+        //    Random random = new Random();
+        //    for (int i = 0; i < listCopy.Count; i++)
+        //    {
+        //        var randomInt = random.Next(0, listCopy.Count);
+        //        var item = listCopy[randomInt];
+        //        listCopy.Remove(item);
+        //        shuffledList.Add(item);
+        //    }
 
-            return shuffledList;
-        }
+        //    return shuffledList;
+        //}
 
 
         public List<T> ShuffleList2<T>(List<T> list)

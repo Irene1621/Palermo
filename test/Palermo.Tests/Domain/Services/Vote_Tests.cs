@@ -11,8 +11,9 @@ using Xunit;
 
 namespace Palermo.Tests.Domain.Services
 {
-    internal class Vote_Tests
+    public class Vote_Tests
     {
+        [Fact]
         public void StartVotingTest()
         {
             //Arrange
@@ -27,6 +28,7 @@ namespace Palermo.Tests.Domain.Services
             Assert.Contains(voter, VotingResult.PlayersVoted);
         }
 
+        [Fact]
         public void ShouldGetVotingResultsTest()
         {
             //Arrange
@@ -42,6 +44,7 @@ namespace Palermo.Tests.Domain.Services
             Assert.Equal(target, VotingResult.EliminatedPlayer);
         }
 
+        [Fact]
         public void ShouldGetEliminatedPlayerTest()
         {
             //Arrange

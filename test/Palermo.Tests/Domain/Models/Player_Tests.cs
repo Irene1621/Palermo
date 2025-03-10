@@ -9,10 +9,10 @@ using Xunit;
 
 namespace Palermo.Tests.Domain.Models
 {
-    [Test Class]
-    internal class Player_Tests
+    
+    public class Player_Tests
     {
-        [Test Method]
+        [Fact]
         public void AddVoteTest()
         {
             //Arrange
@@ -23,6 +23,7 @@ namespace Palermo.Tests.Domain.Models
             Assert.Equal(1, player.Votes);
         }
 
+        [Fact]
         public void EliminateTest()
         {
             //Arrange
@@ -33,6 +34,7 @@ namespace Palermo.Tests.Domain.Models
             Assert.False(player.IsAlive);  
         }
 
+        [Fact]
         public void ShouldThrowExceptionPlayerNotAliveTest()
         {
             //Arrange
@@ -44,6 +46,7 @@ namespace Palermo.Tests.Domain.Models
             //Assert
         }
 
+        [Fact]
         public void ShouldThrowExceptionPlayerCantVoteThemselvesTest()
         {
             //Arrange
@@ -53,6 +56,7 @@ namespace Palermo.Tests.Domain.Models
             //Assert
         }
 
+        [Fact]
         public void ResetVotesTest()
         {
             //Arrange

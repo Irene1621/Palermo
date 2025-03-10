@@ -9,7 +9,7 @@ using Palermo.Enums;
 
 namespace Palermo.Models;
 
-    internal class Mafia : Player
+    public class Mafia : Player
     {
     public Mafia(int id, string name) : base (id, name, RoleType.Mafia)
     {

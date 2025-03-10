@@ -10,7 +10,7 @@ using Palermo.Enums;
 
 namespace Palermo.Models
 {
-    internal class Detective : Player
+    public class Detective : Player
     {
         public Detective(int id, string name) : base (id, name, RoleType.Detective)
         {
